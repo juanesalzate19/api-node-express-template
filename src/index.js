@@ -1,4 +1,4 @@
-import Express  from "express";
+import Express, { response }  from "express";
 
 //Routers
 import {usersRouters} from "./routers/usersRouters.js";
@@ -8,9 +8,13 @@ const port = 3000;
 
 //App Routers
 app.use("/api/users", usersRouters);
-
 app.use('/', (request, response) => {
     response.send("!Hello Word!");
+});
+
+app.use('*', (request, response)=>{
+    response.status(404).send("No se pudo encontrar la pagina");
+
 })
 
 app.listen(port, () => {
