@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Este es el archivo readme de la clase de git y NodeJs",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
