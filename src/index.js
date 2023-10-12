@@ -1,4 +1,4 @@
-import Express, { response }  from "express";
+import Express from "express";
 
 //Routers
 import {usersRouters} from "./routers/usersRouters.js";
