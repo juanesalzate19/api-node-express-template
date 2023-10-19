@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+//Trabajador
+model User {
+  id       Int      @id @default(autoincrement()) //El @id es decir un primary key
+  name     String
+  email    String   @unique //Lo que hace @unique hace que no se repota el mismo email
+  password String
+  createAt DateTime @default(now()) // lo que hace @default(now()) es que crea la fecha en la que se creo
+  updateAt DateTime @updatedAt // lo que hace @updatedAt es que actualiza la fecha de la creacion
+  Order    Order[]
+
+  @@map("users")
+}
+
+//Categoria
+model Category {
+  id          Int       @id @default(autoincrement()) //El @id es decir un primary key
+  name        String
+  description String?
+  createAt    DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+  Product     Product[]
+
+  @@map("categorias")
+}
+
+//Productos
+model Product {
+  id          Int           @id @default(autoincrement()) //El @id es decir un primary key
+  name        String
+  description String?
+  stok        Int
+  price       Float
+  categoryId  Int
+  category    Category      @relation(fields: [categoryId], references: [id])
+  createAt    DateTime      @default(now())
+  updateAt    DateTime      @updatedAt
+  OrderDetail OrderDetail[]
+
+  @@map("products")
+}
+
+//Clientes
+model Client {
+  id       Int      @id @default(autoincrement()) //El @id es decir un primary key
+  document String?   @unique
+  name     String
+  email    String   @unique //Lo que hace @unique hace que no se repota el mismo email
+  adress   String
+  phone    String?
+  createAt DateTime @default(now()) // lo que hace @default(now()) es que crea la fecha en la que se creo
+  updateAt DateTime @updatedAt // lo que hace @updatedAt es que actualiza la fecha de la creacion
+  Order    Order[]
+
+  @@map("clients")
+}
+
+//Orden / Pedido es la factura que nos llega a nosotros 
+model Order {
+  id          Int           @id @default(autoincrement()) //El @id es decir un primary key
+  invoice     String        @map("Invoices")
+  client      Client        @relation(fields: [clientId], references: [id])
+  clientId    Int
+  user        User          @relation(fields: [userId], references: [id])
+  userId      Int
+  total       Float
+  createAt    DateTime      @default(now()) // lo que hace @default(now()) es que crea la fecha en la que se creo
+  updateAt    DateTime      @updatedAt // lo que hace @updatedAt es que actualiza la fecha de la creacion
+  OrderDetail OrderDetail[]
+
+  @@map("orders")
+}
+
+//Factura del cliente
+model OrderDetail {
+  id        Int      @id @default(autoincrement()) //El @id es decir un primary key
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  products  Product  @relation(fields: [productId], references: [id])
+  productId Int
+  quentity  Int
+  price     Float
+  createAt  DateTime @default(now()) // lo que hace @default(now()) es que crea la fecha en la que se creo
+  updateAt  DateTime @updatedAt // lo que hace @updatedAt es que actualiza la fecha de la creacion
+
+  @@map("order_details")
+}
